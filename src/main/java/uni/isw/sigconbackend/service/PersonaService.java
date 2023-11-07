@@ -1,6 +1,7 @@
 package uni.isw.sigconbackend.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uni.isw.sigconbackend.model.Persona;
@@ -13,6 +14,10 @@ public class PersonaService {
     
     public List<Persona> getPersonas(){
         return personaRepository.findAll();        
+    }
+    
+    public Optional<Persona> getPersona(Long id){
+        return personaRepository.findById(id);
     }
         
 }
