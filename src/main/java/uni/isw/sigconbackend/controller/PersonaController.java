@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,18 +40,57 @@ public class PersonaController {
         logger.info("> getPersonas[Persona]");        
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-    @RequestMapping(value="/search/{id}",method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Persona> getPersona(@PathVariable("id") Long id){
-        logger.info("> getPersona [Persona]");
-        Optional<Persona> persona=null;
+    @RequestMapping(value="/search",method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Persona> getPersona(@RequestBody Optional<Persona> persona){
+        logger.info(">getPersona" + persona.toString());        
         try{
-            persona=personaService.getPersona(id);
+            persona=personaService.getPersona(persona.get().getId_persona());
         }
         catch(Exception e){
             logger.error("Excepcion inesperada al obtener la persona",e);
-            return new ResponseEntity<>(persona.get(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(persona.get(), HttpStatus.OK);
     }
+    @RequestMapping(value="/agregar",method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Persona> agregar(@RequestBody Persona persona){
+        logger.info(">agregar:"+persona.toString());
+        try{
+            personaService.saveOrUpdate(persona);
+        }catch(Exception e){
+            logger.error("Excepcion inesperada al agregar persona",e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(persona, HttpStatus.OK);        
+     }
+    
+    @RequestMapping(value="/actualizar",method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Persona> actualizar(@RequestBody Persona persona){
+        logger.info(">actualizar:"+persona.toString());
+        try{
+            personaService.saveOrUpdate(persona);
+        }catch(Exception e){
+            logger.error("Excepcion inesperada al actualizar persona",e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(persona, HttpStatus.OK);  
+        
+     }
+    
+    @RequestMapping(value="/eliminar",method=RequestMethod.DELETE, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Persona> eliminar(@RequestBody Optional<Persona> persona){
+        logger.info(">eliminar:"+persona.toString());
+        try{
+            persona=personaService.getPersona(persona.get().getId_persona());
+            if(persona.isPresent())
+                personaService.delete(persona.get().getId_persona());
+        }catch(Exception e){
+            logger.error("Excepcion inesperada al actualizar persona",e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(persona.get(), HttpStatus.OK);        
+     }
+    
+    
     
 }

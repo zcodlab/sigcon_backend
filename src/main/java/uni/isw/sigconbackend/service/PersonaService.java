@@ -19,5 +19,11 @@ public class PersonaService {
     public Optional<Persona> getPersona(Long id){
         return personaRepository.findById(id);
     }
+    public void saveOrUpdate(Persona persona){
+        personaRepository.save(persona);        
+    }
+    public void delete(Long id){
+        personaRepository.deleteById(id);
+    }        
         
 }
