@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### SpringBoot ###
-application.properties
+/src/main/resources/application.properties
