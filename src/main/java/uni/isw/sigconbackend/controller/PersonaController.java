@@ -20,7 +20,7 @@ import uni.isw.sigconbackend.service.PersonaService;
 @RestController
 @RequestMapping(path="api/v1/personas")
 public class PersonaController {
-    private Logger logger=LoggerFactory.getLogger(this.getClass());
+    private final Logger logger=LoggerFactory.getLogger(this.getClass());
     @Autowired
     PersonaService personaService;
     
