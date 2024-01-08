@@ -1,12 +1,13 @@
-FROM ubuntu:latest AS build 
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
-COPY . .
-RUN ./mvn bootJar --no-daemon
+FROM openjdk:17-jdk-slim AS build
+
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+RUN ./mvnw dependency:resolve
+
+COPY src src
+RUN ./mvnw package
 
 FROM openjdk:17-jdk-slim
-EXPOSE 8080
-COPY --from=build /target/sigconbackend-0.0.1-SNAPSHOT.jar sigconbackend.jar
-                              
-
-ENTRYPOINT ["java","-jar","sigconbackend.jar"]
+WORKDIR sigconbackend
+COPY --from=build target/*.jar sigconbackend.jar
+ENTRYPOINT ["java", "-jar", "sigconbackend.jar"]
