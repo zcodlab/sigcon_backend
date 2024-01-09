@@ -15,7 +15,7 @@ FROM openjdk:17-slim
 COPY --from=builder /app/target/sigconbackend-0.0.1-SNAPSHOT.jar /app/sigconbackend.jar
 
 # Puerto en el que la aplicación Spring Boot escuchará las solicitudes
-EXPOSE 8082
+EXPOSE 8080
 
 # Comando para ejecutar la aplicación al iniciar el contenedor
 CMD ["java", "-jar", "/app/sigconbackend.jar"]
